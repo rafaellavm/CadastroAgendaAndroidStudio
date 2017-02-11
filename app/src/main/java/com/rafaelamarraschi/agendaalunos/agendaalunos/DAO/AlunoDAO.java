@@ -2,10 +2,18 @@ package com.rafaelamarraschi.agendaalunos.agendaalunos.DAO;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 
 import com.rafaelamarraschi.agendaalunos.agendaalunos.modelo.Aluno;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by Rafaela on 08/02/2017.
@@ -44,5 +52,32 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
         db.insert("Alunos", null, dados);
 
+    }
+
+    public List<Aluno> buscaAlunos() {
+        String sql = "SELECT *FROM Alunos";
+        SQLiteDatabase db = getWritableDatabase();
+
+        //devolte um cursor, como se fosse um ponteiro
+        Cursor c = db.rawQuery(sql, null);
+        List<Aluno> alunos = new ArrayList<Aluno>();
+
+        while (c.moveToNext()){
+            Aluno aluno = new Aluno();
+
+            aluno.setId(c.getLong(c.getColumnIndex("id")));
+            aluno.setNome(c.getString(c.getColumnIndex("nome")));
+            aluno.setEndereco(c.getString(c.getColumnIndex("endereco")));
+            aluno.setTelefone(c.getString(c.getColumnIndex("telefone")));
+            aluno.setSite(c.getString(c.getColumnIndex("site")));
+            aluno.setNota(c.getDouble(c.getColumnIndex("nota")));
+
+            alunos.add(aluno);
+        }
+
+        //libera memória do cursor
+        c.close();
+
+        return alunos;
     }
 }
