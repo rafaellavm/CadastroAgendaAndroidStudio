@@ -25,16 +25,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
 
-        AlunoDAO dao = new AlunoDAO(this);
-        List<Aluno> alunos = dao.buscaAlunos();
-        dao.close();
-
-        //String[] alunos = {"Daniel", "Rafaela", "Elaine", "Manuela"};
-        ListView btnlistaAlunos = (ListView) findViewById(R.id.lista_alunos);
-        ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
-        btnlistaAlunos.setAdapter(adapter);
-
-
         FloatingActionButton btnNovoAluno = (FloatingActionButton) findViewById(R.id.btnNovoAluno);
         btnNovoAluno.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,9 +35,27 @@ public class ListaAlunosActivity extends AppCompatActivity {
             }
         });
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
+    private void carregaLista() {
+        AlunoDAO dao = new AlunoDAO(this);
+        List<Aluno> alunos = dao.buscaAlunos();
+        dao.close();
+
+        //String[] alunos = {"Daniel", "Rafaela", "Elaine", "Manuela"};
+        ListView btnlistaAlunos = (ListView) findViewById(R.id.lista_alunos);
+        ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
+        btnlistaAlunos.setAdapter(adapter);
+    }
+
+    @Override
+    //ler sobre ciclo de vida de uma Activity https://developer.android.com/reference/android/app/Activity.html
+    //colocndo o método carregaLista aqui ele vai carregar a lista atualizada sempre que adicionarmos um aluno novo, isso por conta do ciclo de vida
+    //de uma activity conforme o site
+    protected void onResume() {
+        super.onResume();
+        carregaLista();
+    }
 }
