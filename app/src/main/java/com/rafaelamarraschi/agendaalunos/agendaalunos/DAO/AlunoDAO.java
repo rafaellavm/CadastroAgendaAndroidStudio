@@ -5,15 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.NonNull;
+
 
 import com.rafaelamarraschi.agendaalunos.agendaalunos.modelo.Aluno;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+
 import java.util.List;
-import java.util.ListIterator;
+
+import java.lang.String;
 
 /**
  * Created by Rafaela on 08/02/2017.
@@ -79,5 +79,12 @@ public class AlunoDAO extends SQLiteOpenHelper {
         c.close();
 
         return alunos;
+    }
+
+    public void deleta(Aluno aluno) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String [] params = {String.valueOf(aluno.getId())};
+        db.delete("Alunos", "id = ?", params);
     }
 }
