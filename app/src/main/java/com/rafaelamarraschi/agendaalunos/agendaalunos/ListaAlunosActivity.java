@@ -24,15 +24,30 @@ import java.util.List;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
-    private ListView btnlistaAlunos;
+    private ListView listaAlunos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
 
-        //String[] alunos = {"Daniel", "Rafaela", "Elaine", "Manuela"};
-        btnlistaAlunos = (ListView) findViewById(R.id.lista_alunos);
+        listaAlunos = (ListView) findViewById(R.id.lista_alunos);
+
+        //setOnItemClickListener: para clicar em UM ITEM da lista
+        //método para uma ação caso o usuário clique em um aluno da lista (no caso será pra editá-lo)
+        listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> lista, View item, int position, long id) {
+                //retorna a posição do aluno dentro da lista
+                Aluno aluno = (Aluno)listaAlunos.getItemAtPosition(position);
+                Toast.makeText(ListaAlunosActivity.this, aluno.getNome(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //caso você queira um click longo em um item da lista
+        //listaAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+        // });
 
         FloatingActionButton btnNovoAluno = (FloatingActionButton) findViewById(R.id.btnNovoAluno);
         btnNovoAluno.setOnClickListener(new View.OnClickListener() {
@@ -47,7 +62,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        registerForContextMenu(btnlistaAlunos);
+        registerForContextMenu(listaAlunos);
 
     }
 
@@ -58,7 +73,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         dao.close();
 
         ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
-        btnlistaAlunos.setAdapter(adapter);
+        listaAlunos.setAdapter(adapter);
     }
 
     @Override
@@ -81,7 +96,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                Aluno aluno = (Aluno) btnlistaAlunos.getItemAtPosition(info.position);
+                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
 
                 AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
                 dao.deleta(aluno);
