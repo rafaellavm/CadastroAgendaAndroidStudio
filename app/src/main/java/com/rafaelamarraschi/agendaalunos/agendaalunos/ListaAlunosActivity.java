@@ -1,22 +1,16 @@
 package com.rafaelamarraschi.agendaalunos.agendaalunos;
-
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Button;
 import android.widget.Toast;
-
 import com.rafaelamarraschi.agendaalunos.agendaalunos.DAO.AlunoDAO;
 import com.rafaelamarraschi.agendaalunos.agendaalunos.modelo.Aluno;
 
@@ -26,6 +20,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     private ListView listaAlunos;
 
+
+    // --------------------------------------- onCreate() + método para clique do aluno (edição) ---------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -39,9 +35,13 @@ public class ListaAlunosActivity extends AppCompatActivity {
         listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> lista, View item, int position, long id) {
+
                 //retorna a posição do aluno dentro da lista
-                Aluno aluno = (Aluno)listaAlunos.getItemAtPosition(position);
-                Toast.makeText(ListaAlunosActivity.this, aluno.getNome(), Toast.LENGTH_SHORT).show();
+                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(position);
+                Intent intentVaiProFormuIario = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+                intentVaiProFormuIario.putExtra("aluno", aluno);
+
+                startActivity(intentVaiProFormuIario);
             }
         });
 
@@ -49,6 +49,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
         //listaAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
         // });
 
+
+        // --------------------------------------- botão para adicionar aluno  ---------------------------------------
         FloatingActionButton btnNovoAluno = (FloatingActionButton) findViewById(R.id.btnNovoAluno);
         btnNovoAluno.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +68,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     }
 
-
+    // --------------------------------------- carregamento da lista de alunos  ---------------------------------------
     private void carregaLista() {
         AlunoDAO dao = new AlunoDAO(this);
         List<Aluno> alunos = dao.buscaAlunos();
@@ -76,6 +78,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
         listaAlunos.setAdapter(adapter);
     }
 
+
+    // ---------------------------------------chamada do método onResume () ---------------------------------------
     @Override
     //ler sobre ciclo de vida de uma Activity https://developer.android.com/reference/android/app/Activity.html
     //colocndo o método carregaLista aqui ele vai carregar a lista atualizada sempre que adicionarmos um aluno novo, isso por conta do ciclo de vida
@@ -85,6 +89,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
         carregaLista();
     }
 
+
+    // --------------------------------------- menu de contexto: deletar aluno ---------------------------------------
     @Override
     //menu de contexto, quando você clica sem tirar o mouse de cima de um aluno aparece a opção 'deletar'
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {

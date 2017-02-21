@@ -1,12 +1,11 @@
 package com.rafaelamarraschi.agendaalunos.agendaalunos;
-
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.rafaelamarraschi.agendaalunos.agendaalunos.DAO.AlunoDAO;
 import com.rafaelamarraschi.agendaalunos.agendaalunos.modelo.Aluno;
 
@@ -21,8 +20,17 @@ public class FormularioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_formulario);
 
         helper = new FormularioHelper(this);
+
+        //CASO SEJA ALTERACAO DO ALUNO, a 'etiqueta' 'aluno' virá preenchida, senão virá vazia, que no caso virará adição de aluno
+        //recuperar a intent que foi usada pra abrir esse formulario (no caso o clique no aluno da lista)
+        Intent intent = getIntent();
+        Aluno aluno = (Aluno) intent.getSerializableExtra("aluno");
+        if (aluno != null) {
+            helper.preencheFormulario(aluno);
+        }
     }
 
+    // --------------------------------------- criacao do optionsMenu e atribuicao de qual menu fará parte dele   ---------------------------------------
     //método que cria e especifica quais itens do menu serão colocados na parte de cima
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -31,6 +39,7 @@ public class FormularioActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // --------------------------------------- botão menu para adicionar aluno  -----------------------------------------------------------------------------
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
